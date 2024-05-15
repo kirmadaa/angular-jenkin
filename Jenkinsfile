@@ -16,7 +16,7 @@ pipeline {
         stage('Build') {
             steps {
                 // Build the Angular project
-                bat 'bat 'npm run build -- --configuration production'
+                bat 'npm run build -- --configuration production'
             }
         }
 
