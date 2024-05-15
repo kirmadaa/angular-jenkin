@@ -4,7 +4,9 @@ pipeline {
     tools {
         nodejs 'NodeJS' // Name of the NodeJS installation in Jenkins
     }
-    stage('Install Dependencies') {
+
+    stages {
+        stage('Install Dependencies') {
             steps {
                 // Install project dependencies
                 bat 'npm install'
@@ -40,7 +42,7 @@ pipeline {
                     def warFile = "dist\\war\\angular-jenkins.war"
 
                     // Stop Tomcat
-                    bat "net stop Tomcat8"
+                    bat "net stop Tomcat10"
 
                     // Copy WAR file to Tomcat webapps directory
                     bat "copy ${warFile} ${tomcatPath}\\your-angular-project.war"
@@ -51,3 +53,4 @@ pipeline {
             }
         }
     }
+}
