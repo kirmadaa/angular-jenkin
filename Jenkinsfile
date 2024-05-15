@@ -69,7 +69,7 @@ pipeline {
                     bat "net stop Tomcat10"
 
                     // Copy WAR file to Tomcat webapps directory
-                    bat "copy ${warFile} ${tomcatPath}\\your-angular-project.war"
+                    bat "copy ${warFile} ${tomcatPath}\\angular-jenkins.war"
 
                     // Start Tomcat
                     bat "net start Tomcat10"
