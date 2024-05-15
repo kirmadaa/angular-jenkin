@@ -10,6 +10,9 @@ pipeline {
             steps {
                 // Install project dependencies
                 bat 'npm install'
+                
+                // Fix vulnerabilities
+                bat 'npm audit fix || exit 0'  // Ensure the build does not fail if some vulnerabilities can't be fixed automatically
             }
         }
 
@@ -20,15 +23,35 @@ pipeline {
             }
         }
 
+        stage('Verify Build Output') {
+            steps {
+                // List contents of dist directory for debugging
+                bat 'dir dist'
+                bat 'dir dist\\angular-jenkin'
+            }
+        }
+
         stage('Package') {
             steps {
                 script {
-                    // Package the build output as a WAR file
-                    bat '''
-                    mkdir dist\\war
-                    xcopy /E /I /Y dist\\angular-jenkins\\* dist\\war\\
-                    cd dist\\war
-                    jar -cvf angular-jenkins.war *
+                    // Package the build output as a WAR file using PowerShell
+                    powershell '''
+                    $distPath = "dist\\angular-jenkin"
+                    $warPath = "dist\\war"
+                    
+                    # Ensure the war directory exists
+                    if (-Not (Test-Path -Path $warPath)) {
+                        New-Item -ItemType Directory -Path $warPath
+                    }
+                    
+                    # Copy files from dist\\angular-jenkin to dist\\war
+                    Copy-Item -Path "$distPath\\*" -Destination $warPath -Recurse -Force
+                    
+                    # Change to the war directory
+                    Set-Location -Path $warPath
+                    
+                    # Create the WAR file
+                    & jar -cvf angular-jenkins.war *
                     '''
                 }
             }
@@ -50,6 +73,13 @@ pipeline {
                     // Start Tomcat
                     bat "net start Tomcat10"
                 }
+            }
+        }
+
+        stage('Verify JDK Installation') {
+            steps {
+                // Verify if jar command is available
+                bat 'jar'
             }
         }
     }
