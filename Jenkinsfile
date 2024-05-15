@@ -9,24 +9,19 @@ pipeline {
     stages {
         stage('Install Dependencies') {
             steps {
-                // Install project dependencies
                 bat 'npm install'
-                
-                // Fix vulnerabilities
-                bat 'npm audit fix || exit 0'  // Ensure the build does not fail if some vulnerabilities can't be fixed automatically
+                bat 'npm audit fix || exit 0' 
             }
         }
 
         stage('Build') {
             steps {
-                // Build the Angular project
                 bat 'npm run build -- --configuration production'
             }
         }
 
         stage('Verify Build Output') {
             steps {
-                // List contents of dist directory for debugging
                 bat 'dir dist'
                 bat 'dir dist\\angular-jenkin'
             }
