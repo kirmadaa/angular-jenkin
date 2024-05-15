@@ -88,7 +88,7 @@ pipeline {
         stage('Verify JDK Installation') {
             steps {
                 // Verify if jar command is available
-                bat 'jar'
+                bat 'jar --version'
             }
         }
     }
