@@ -25,9 +25,9 @@ pipeline {
                 script {
                     // Package the build output as a WAR file
                     bat '''
-                    mkdir -p dist/war
-                    cp -r dist\\angular-jenkins\\* dist\\war\\
-                    cd dist/war
+                    mkdir dist\\war
+                    xcopy /E /I /Y dist\\angular-jenkins\\* dist\\war\\
+                    cd dist\\war
                     jar -cvf angular-jenkins.war *
                     '''
                 }
