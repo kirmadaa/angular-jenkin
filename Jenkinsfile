@@ -64,9 +64,13 @@ pipeline {
                     // Define variables
                     def tomcatPath = "C:\\Program Files\\Apache Software Foundation\\Tomcat 10.1\\webapps"
                     def warFile = "dist\\war\\angular-jenkins.war"
-
-                    // Stop Tomcat
-                    bat "net stop Tomcat10"
+                    def tomcatStatus = bat(script: 'sc query Tomcat10 | findstr /C:"STOPPED"', returnStatus: true)
+                    if (tomcatStatus == 0) {
+                        echo "Tomcat is already stopped."
+                    } else {
+                      // Stop Tomcat
+                      bat "net stop Tomcat10"
+                    }
 
                     // Copy WAR file to Tomcat webapps directory
                     bat "copy ${warFile} ${tomcatPath}\\angular-jenkins.war"
